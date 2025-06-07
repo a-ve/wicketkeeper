@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  wicketkeeper:
+    user: "${UID}:${GID}"
+    build: .
+    container_name: wicketkeeper-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - LISTEN_PORT=8080
+      - REDIS_ADDR=redis:6379
+      - DIFFICULTY=4
+      - ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,*
+      - PRIVATE_KEY_PATH=/data/wicketkeeper.key
+    volumes:
+      - ./data:/data
+    depends_on:
+      - redis
+    networks:
+      - wicketkeeper-net
+
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: wicketkeeper-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - wicketkeeper-net
+
+networks:
+  wicketkeeper-net:
+    driver: bridge
+
+volumes:
+  redis-data:
