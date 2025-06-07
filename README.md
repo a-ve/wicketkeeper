@@ -50,29 +50,30 @@ The Wicketkeeper ecosystem involves four main actors: the User's Browser, the Cl
 
 ```mermaid
 sequenceDiagram
-    participant User's Browser
-    participant Client Widget
-    participant Your App Backend
-    participant Wicketkeeper Server
+    %% define IDs and human-readable labels
+    participant UB as "User's Browser"
+    participant CW as "Client Widget"
+    participant AB as "Your App Backend"
+    participant WKS as "Wicketkeeper Server"
 
-    User's Browser->>+Client Widget: User interacts with form
-    Client Widget->>+Wicketkeeper Server: GET /v0/challenge
-    Wicketkeeper Server-->>-Client Widget: Returns signed JWT (Challenge + Difficulty)
-    Client Widget->>Client Widget: Solves Proof-of-Work in-browser
-    Note over Client Widget: Finds a valid nonce/hash pair
-    Client Widget-->>User's Browser: Populates hidden form field with solution
+    UB->>+CW: User interacts with form
+    CW->>+WKS: GET /v0/challenge
+    WKS-->>-CW: Returns signed JWT (Challenge + Difficulty)
 
-    User's Browser->>+Your App Backend: Submits form with solution data
+    CW->>CW: Solves Proof-of-Work in-browser
+    Note over CW: Finds a valid nonce/hash pair
+    CW-->>UB: Populates hidden form field with solution
 
-    Your App Backend->>+Wicketkeeper Server: POST /v0/siteverify (with solution)
-    Wicketkeeper Server->>Wicketkeeper Server: Verify JWT, Check PoW hash and Check Bloom Filter (anti-replay)
-    Wicketkeeper Server-->>-Your App Backend: Returns success/failure
+    UB->>+AB: Submits form with solution data
+    AB->>+WKS: POST /v0/siteverify (with solution)
+    WKS->>WKS: Verify JWT, Check PoW hash and Bloom-filter
+    WKS-->>-AB: Returns success/failure
 
     alt Verification Successful
-        Your App Backend->>Your App Backend: Process form data (e.g., save comment)
-        Your App Backend-->>-User's Browser: Show success message
+        AB->>AB: Process form data (e.g., save comment)
+        AB-->>UB: Show success message
     else Verification Failed
-        Your App Backend-->>-User's Browser: Show error message
+        AB-->>UB: Show error message
     end
 
 ```
