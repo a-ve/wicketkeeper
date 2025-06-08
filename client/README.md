@@ -69,15 +69,10 @@ Place the script tag at the end of your `<body>`.
 
 ### 2. Add the Widget to Your Form
 
-There are two ways to render the widget: Automatic and Manual.
-
-#### Automatic Rendering (Declarative)
-
-This is the simplest method. Add a `<div>` with the class `.wicketkeeper` inside your form. The script will automatically find and initialize it.
+Add a `<div>` with the class `.wicketkeeper` inside your form. The script will automatically find and initialize it.
 
 You can configure it using `data-*` attributes:
 
-- `data-challenge-url`: (Optional) Overrides the challenge URL that was set at build time.
 - `data-input-name`: (Optional) Sets the `name` attribute of the hidden input field. Defaults to `wicketkeeper_solution`.
 
 **Example:**

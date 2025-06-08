@@ -159,7 +159,14 @@ node dist/server.js
 
 You should see the output: `🚀 Server listening on http://localhost:8081`.
 
-You can now navigate to **<http://localhost:8081>** in your browser to see the Wicketkeeper demo in action!
+After this, start serving the `example/public` folder using:
+
+```bash
+cd example/public
+npx serve
+```
+
+You can now navigate to **<http://localhost:3000>** in your browser to see the Wicketkeeper demo in action!
 
 ## Usage of Individual Components
 

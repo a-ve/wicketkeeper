@@ -53,7 +53,7 @@ A simple Express + TypeScript demo showing how to integrate Wicketkeeper into a 
 
    ```bash
    cd server
-   go run .
+   docker compose up -d
    ```
 
 3. **Build the front‑end widget**
