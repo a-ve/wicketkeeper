@@ -1,0 +1,7 @@
+## Licensing
+
+- `client/` and `example/` are released under the MIT License.  
+  See `client/LICENSE` and `example/LICENSE` for details.
+
+- `server/` is released under the GNU Affero GPL v3.0.  
+  See `server/LICENSE` for details.

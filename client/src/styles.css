@@ -1,0 +1,146 @@
+.wicketkeeper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  background: #fff;
+  width: 300px;
+  height: 65px;
+  padding: 0 0.8rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  font-family: Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  user-select: none;
+  color: #202124;
+}
+.wicketkeeper.success {
+  border-color: #2ecc71;
+}
+.wicketkeeper.error {
+  border-color: #e74c3c;
+}
+.wicketkeeper[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.wicketkeeper-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  overflow: hidden;
+}
+.wicketkeeper-indicator {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #d9d9d9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wicketkeeper-spinner {
+  position: absolute;
+  inset: 0;
+  border: 3px solid #8c8c8c;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: wk-spin 0.8s linear infinite;
+  display: none;
+}
+.wicketkeeper-indicator.loading .wicketkeeper-spinner {
+  display: block;
+}
+.wicketkeeper-check {
+  width: 15px;
+  height: 15px;
+  display: none;
+  stroke: #fff;
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+.wicketkeeper-indicator.success {
+  background: #2ecc71;
+  border-color: #2ecc71;
+}
+.wicketkeeper-indicator.success .wicketkeeper-check {
+  display: inline;
+  stroke: #fff !important;
+}
+
+.wicketkeeper-message {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+@keyframes wk-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .wicketkeeper-indicator.success,
+  .wk-dark .wicketkeeper-indicator.success,
+  .wicketkeeper.wk-dark .wicketkeeper-indicator.success {
+    background: #2ecc71;
+    border-color: #2ecc71;
+  }
+
+  .wicketkeeper {
+    border-color: #fff;
+    background: #1e1e1e;
+    color: #e7e7e7;
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.08);
+  }
+  .wicketkeeper-message {
+    color: #e7e7e7;
+  }
+  .wicketkeeper.success {
+    border-color: #2ecc71;
+  }
+  .wicketkeeper.error {
+    border-color: #e74c3c;
+  }
+  .wicketkeeper-indicator {
+    border-color: #fff;
+  }
+  .wicketkeeper-indicator.loading .wicketkeeper-spinner {
+    border: 3px solid #b0b0b0;
+    border-top-color: transparent;
+  }
+}
+
+.wk-dark .wicketkeeper,
+.wicketkeeper.wk-dark {
+  border-color: #fff;
+  background: #1e1e1e;
+  color: #e7e7e7;
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.08);
+}
+.wk-dark .wicketkeeper-message,
+.wicketkeeper.wk-dark .wicketkeeper-message {
+  color: #e7e7e7;
+}
+.wk-dark .wicketkeeper.success,
+.wicketkeeper.wk-dark.success {
+  border-color: #2ecc71;
+}
+.wk-dark .wicketkeeper.error,
+.wicketkeeper.wk-dark.error {
+  border-color: #e74c3c;
+}
+.wk-dark .wicketkeeper-indicator,
+.wicketkeeper.wk-dark .wicketkeeper-indicator {
+  border-color: #fff;
+}
+.wk-dark .wicketkeeper-indicator.loading .wicketkeeper-spinner,
+.wicketkeeper.wk-dark .wicketkeeper-indicator.loading .wicketkeeper-spinner {
+  border: 3px solid #b0b0b0;
+  border-top-color: transparent;
+}
