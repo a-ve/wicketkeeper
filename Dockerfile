@@ -1,11 +1,21 @@
+FROM node:alpine AS builder_web
+
+WORKDIR /app
+
+COPY ./client/webpack.config.js ./client/package*.json ./
+COPY ./client/src ./src
+
+RUN npm i && npm run build:fast && npm run build:slow
+
 FROM golang:1.23-alpine3.22 AS builder
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY ./server/go.mod ./server/go.sum ./
 RUN go mod download
 
-COPY . ./
+COPY ./server ./
+COPY --from=builder_web /app/dist ./static
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o wicketkeeper .
 

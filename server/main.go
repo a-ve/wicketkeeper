@@ -4,8 +4,10 @@ import (
 	"context"
 	"crypto/ed25519"
 	"crypto/rand"
+	"embed"
 	"encoding/hex"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -17,6 +19,15 @@ import (
 
 	"github.com/rs/cors"
 )
+
+//go:embed static/*
+var assets embed.FS
+var FS, _ = fs.Sub(assets, "static")
+
+func serveFS(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "public, max-age=2628000") // 1 month
+	http.FileServer(http.FS(FS)).ServeHTTP(w, r)
+}
 
 func loadOrGeneratePrivateKey(filePath string) (ed25519.PrivateKey, ed25519.PublicKey, error) {
 	keyDataHex, err := os.ReadFile(filePath)
@@ -114,6 +125,8 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/v0/challenge", srv.BuildChallenge)
 	mux.HandleFunc("/v0/siteverify", srv.VerifyChallenge)
+	mux.HandleFunc("/fast.js", serveFS)
+	mux.HandleFunc("/slow.js", serveFS)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins: srv.allowedOrigins,
