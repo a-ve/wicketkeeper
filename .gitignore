@@ -1,3 +1,6 @@
 node_modules/
 dist/
+vendor/
 wicketkeeper.key
+fast.js
+slow.js

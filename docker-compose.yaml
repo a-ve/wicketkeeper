@@ -3,7 +3,8 @@ version: '3.8'
 services:
   wicketkeeper:
     user: "${UID}:${GID}"
-    build: .
+    # build: .
+    image: ghcr.io/maxlerebourg/wicketkeeper:latest
     container_name: wicketkeeper-app
     restart: unless-stopped
     ports:

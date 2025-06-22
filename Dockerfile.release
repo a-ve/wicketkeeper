@@ -1,0 +1,9 @@
+FROM gcr.io/distroless/static-debian12 AS final
+
+COPY wicketkeeper /wicketkeeper
+
+EXPOSE 8080
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["./wicketkeeper"]
