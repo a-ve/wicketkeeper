@@ -10,7 +10,7 @@ A privacy-friendly, proof-of-work (PoW) captcha system designed to be a user-cen
 
 It achieves this by issuing a small, client-side computational challenge that is easy for a modern device to solve but costly for bots to perform at scale. The system is comprised of a Go backend, an embeddable JavaScript client, and a full-stack demo application.
 
-![til](./assets/demo.gif)
+![til](/assets/demo.gif)
 
 ---
 

@@ -1,6 +1,8 @@
 node_modules/
 dist/
 vendor/
+cache/
+.wrangler/
 wicketkeeper.key
 fast.js
 slow.js
