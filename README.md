@@ -121,23 +121,7 @@ docker-compose up -d
 
 This will build and start the `wicketkeeper` Go service on port `8080` and a `redis-stack` container. On the first run, a `wicketkeeper.key` file will be generated in `server/data/`.
 
-### Step 3: Build the Client Widget
-
-The client widget needs to be compiled into a single JavaScript file.
-
-```bash
-cd ../client/
-npm install
-npm run build:fast
-```
-
-This creates `client/dist/wicketkeeper.js`. Now, copy this file to the example application's public directory:
-
-```bash
-cp dist/wicketkeeper.js ../example/public/
-```
-
-### Step 4: Run the Example Application
+### Step 3: Run the Example Application
 
 The example is an Express.js server that serves a simple HTML form and handles submissions.
 
@@ -184,12 +168,12 @@ The server is configured via environment variables. See `server/README.md` for m
 
 ### Client Widget (JavaScript)
 
-The client is a single JS file (`dist/wicketkeeper.js`) that can be included in any HTML page.
+The client is a single JS file (`dist/fast.js`) that can be included in any HTML page.
 
 **1. Include the Script**
 
 ```html
-<script defer src="path/to/wicketkeeper.js"></script>
+<script defer src="path/to/fast.js"></script>
 ```
 
 **2. Add the Widget to a Form**
