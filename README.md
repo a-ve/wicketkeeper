@@ -1,6 +1,6 @@
-## <img src="/assets/hero-repo.png" alt="hero" width="100%" />
-
----
+<p align="center">
+  <a href="https://wicketkeeper.io"><img alt="wicketkeeper" src="/assets/hero-repo.png" width="100%"></a>
+</p>
 
 ![Go](https://img.shields.io/badge/Go-1.23-00ADD8?logo=go&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-16+-43853d?logo=node.js&logoColor=white)
