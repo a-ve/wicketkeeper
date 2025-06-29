@@ -1,4 +1,4 @@
-## <img src="/assets/hero.png" alt="hero" width="400" />
+## <img src="/assets/hero-repo.png" alt="hero" width="400" />
 
 ---
 
