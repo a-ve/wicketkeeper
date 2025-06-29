@@ -102,6 +102,7 @@ import { solver } from "solver";
         container.dataset.wicketkeeperSolution = JSON.stringify(solved);
         hiddenInput.value = JSON.stringify(solved);
         options.onSolved?.(solved);
+        options.callback?.(solved);
       } catch (err) {
         console.error(err);
         flashError(err.message);
@@ -138,6 +139,7 @@ import { solver } from "solver";
         if (el.dataset.challengeUrl)
           opts.endpoints = { challenge: el.dataset.challengeUrl };
         if (el.dataset.inputName) opts.inputName = el.dataset.inputName;
+        if (el.dataset.callback) opts.callback = window[el.dataset.callback];
         render(el, opts);
       });
   }

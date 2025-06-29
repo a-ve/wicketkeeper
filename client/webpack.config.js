@@ -11,7 +11,7 @@ module.exports = (env = {}) => {
     mode: env.mode || "production",
     entry: "./src/main.js",
     output: {
-      filename: "wicketkeeper.js",
+      filename: `${solverType}.js`,
       path: path.resolve(__dirname, "dist"),
     },
     resolve: {
