@@ -1,4 +1,6 @@
-# ▌▌▌ wicketkeeper
+<p align="center">
+  <a href="https://wicketkeeper.io"><img alt="wicketkeeper" src="/assets/hero-repo.png" width="100%"></a>
+</p>
 
 ![Go](https://img.shields.io/badge/Go-1.23-00ADD8?logo=go&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-16+-43853d?logo=node.js&logoColor=white)
@@ -9,8 +11,6 @@
 A privacy-friendly, proof-of-work (PoW) captcha system designed to be a user-centric alternative to traditional captchas. Wicketkeeper protects your web forms from simple bots without requiring users to solve frustrating puzzles.
 
 It achieves this by issuing a small, client-side computational challenge that is easy for a modern device to solve but costly for bots to perform at scale. The system is comprised of a Go backend, an embeddable JavaScript client, and a full-stack demo application.
-
-![til](/assets/demo.gif)
 
 ---
 
