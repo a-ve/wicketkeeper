@@ -34,7 +34,7 @@ func serveJS(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "failed to read file", http.StatusInternalServerError)
 		return
 	}
-	newHost = os.Getenv("ROOT_URL")
+	newHost := os.Getenv("ROOT_URL")
 	if newHost == "" {
 		w.Write(data)
 		return
