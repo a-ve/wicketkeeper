@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"crypto/ed25519"
 	"crypto/rand"
@@ -24,9 +25,22 @@ import (
 var assets embed.FS
 var FS, _ = fs.Sub(assets, "static")
 
-func serveFS(w http.ResponseWriter, r *http.Request) {
+func serveJS(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "public, max-age=2628000") // 1 month
-	http.FileServer(http.FS(FS)).ServeHTTP(w, r)
+	w.Header().Set("Content-Type", "application/javascript")
+
+	data, err := fs.ReadFile(FS, r.URL.Path[1:]) // Path only have 2 value /fast.js and /slow.js
+	if err != nil {
+		http.Error(w, "failed to read file", http.StatusInternalServerError)
+		return
+	}
+	scheme := "http"
+	if r.TLS != nil {
+		scheme = "https"
+	}
+	// Change the default challenge URL when served by Go binary 
+	modified := bytes.ReplaceAll(data, []byte("http://localhost:8080"), []byte(scheme + "://" + r.Host))
+	w.Write(modified)
 }
 
 func loadOrGeneratePrivateKey(filePath string) (ed25519.PrivateKey, ed25519.PublicKey, error) {
@@ -125,8 +139,8 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/v0/challenge", srv.BuildChallenge)
 	mux.HandleFunc("/v0/siteverify", srv.VerifyChallenge)
-	mux.HandleFunc("/fast.js", serveFS)
-	mux.HandleFunc("/slow.js", serveFS)
+	mux.HandleFunc("/fast.js", serveJS)
+	mux.HandleFunc("/slow.js", serveJS)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins: srv.allowedOrigins,

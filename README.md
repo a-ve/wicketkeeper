@@ -131,10 +131,10 @@ npm install
 npm run build:fast
 ```
 
-This creates `client/dist/wicketkeeper.js`. Now, copy this file to the example application's public directory:
+This creates `client/dist/fast.js`. Now, copy this file to the example application's public directory:
 
 ```bash
-cp dist/wicketkeeper.js ../example/public/
+cp dist/fast.js ../example/public/
 ```
 
 ### Step 4: Run the Example Application
@@ -154,14 +154,7 @@ node dist/server.js
 
 You should see the output: `🚀 Server listening on http://localhost:8081`.
 
-After this, start serving the `example/public` folder using:
-
-```bash
-cd example/public
-npx serve
-```
-
-You can now navigate to **<http://localhost:3000>** in your browser to see the Wicketkeeper demo in action!
+You can now navigate to **<http://localhost:8081>** in your browser to see the Wicketkeeper demo in action!
 
 ## Usage of Individual Components
 
@@ -184,12 +177,12 @@ The server is configured via environment variables. See `server/README.md` for m
 
 ### Client Widget (JavaScript)
 
-The client is a single JS file (`dist/wicketkeeper.js`) that can be included in any HTML page.
+The client is a single JS file (`dist/fast.js` or `dist/slow.js`) that can be included in any HTML page.
 
 **1. Include the Script**
 
 ```html
-<script defer src="path/to/wicketkeeper.js"></script>
+<script defer src="path/to/fast-or-slow.js"></script>
 ```
 
 **2. Add the Widget to a Form**

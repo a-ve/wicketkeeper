@@ -52,13 +52,13 @@ First, you need to build the client script from the source. The build process bu
     CHALLENGE_URL='https://captcha.your-domain.com/v0/challenge' npm run build:fast
     ```
 
-    This command creates the file `dist/wicketkeeper.js`.
+    This command creates the file `dist/fast.js`.
 
 4.  **Include the script in your HTML:**
-    Copy the generated `wicketkeeper.js` to your website's assets and include it with a `<script>` tag, preferably at the end of the `<body>`.
+    Copy the generated `fast.js` to your website's assets and include it with a `<script>` tag, preferably at the end of the `<body>`.
 
     ```html
-    <script defer src="/path/to/wicketkeeper.js"></script>
+    <script defer src="/path/to/fast.js"></script>
     ```
 
 ### Step 2: Add the Widget to a Form
