@@ -103,17 +103,36 @@ func (s *Server) VerifyChallenge(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	if ctype := r.Header.Get("Content-Type"); ctype != "" &&
-		!strings.HasPrefix(strings.ToLower(ctype), "application/json") {
-		http.Error(w, "invalid content type; expected application/json", http.StatusUnsupportedMediaType)
+	ctype := r.Header.Get("Content-Type")
+	var req VerifyRequestBody
+	if strings.HasPrefix(strings.ToLower(ctype), "application/json") {
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1<<20)).Decode(&req); err != nil {
+			http.Error(w, "failed to parse json: "+err.Error(), http.StatusBadRequest)
+			return
+		}
+	} else if strings.HasPrefix(strings.ToLower(ctype), "application/x-www-form-urlencoded") {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "failed to parse form data: "+err.Error(), http.StatusBadRequest)
+			return
+		}
+		req = VerifyRequestBody{
+			Token:   r.FormValue("token"),
+			Nonce:   r.FormValue("nonce"),
+			Response: r.FormValue("response"),
+		}
+	} else {
+		http.Error(w, "invalid content type", http.StatusUnsupportedMediaType)
 		return
 	}
 
-	var req VerifyRequestBody
-	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1<<20)).Decode(&req); err != nil {
-		http.Error(w, "bad json: "+err.Error(), http.StatusBadRequest)
-		return
+	if req.Token == "" && req.Nonce == "" && req.Response != "" {
+		err := json.Unmarshal([]byte(req.Response), &req)
+		if err != nil {
+			http.Error(w, "failed to parse response:"+err.Error(), http.StatusBadRequest)
+			return
+		}
 	}
+
 	if req.Token == "" || req.Nonce == "" || req.Response == "" {
 		http.Error(w, "token, challenge, nonce, and response fields are required", http.StatusBadRequest)
 		return

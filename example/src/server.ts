@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import path from "path";
 import axios from "axios";
+import { json } from "stream/consumers";
 
 const app = express();
 const PORT = process.env.PORT || 8081;
@@ -23,17 +24,23 @@ app.post("/submit", async (req: Request, res: Response) => {
     return res.status(400).send("⚠️ Missing Wicketkeeper solution");
   }
 
-  let solution: { token: string; nonce: number; response: string };
+  // optional, but you can catch this error earlier
+  let parsed: { token: string; nonce: string; response: string };
   try {
-    solution = JSON.parse(wicketkeeper_response);
+    parsed = JSON.parse(wicketkeeper_response);
   } catch {
     return res.status(400).send("⚠️ Invalid Wicketkeeper payload");
   }
 
   try {
-    const verifyRes = await axios.post(VERIFY_URL, solution, {
-      headers: { "Content-Type": "application/json" },
-    });
+    // Post as json (content-type: application/json)
+    const body = parsed; // all fields
+    // const body = { response: wicketkeeper_response }; // or only response
+    // Post as formData (content-type: application/x-www-form-urlencoded)
+    // const body = new URLSearchParams(parsed); // all fields
+    // const body = new URLSearchParams({ response: wicketkeeper_response }); // or only response
+    
+    const verifyRes = await axios.post(VERIFY_URL, body);
 
     console.log(`verification response: ${JSON.stringify(verifyRes.data)}`);
 
