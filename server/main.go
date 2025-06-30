@@ -34,12 +34,13 @@ func serveJS(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "failed to read file", http.StatusInternalServerError)
 		return
 	}
-	scheme := "http"
-	if r.TLS != nil {
-		scheme = "https"
+	newHost = os.Getenv("ROOT_URL")
+	if newHost == "" {
+		w.Write(data)
+		return
 	}
 	// Change the default challenge URL when served by Go binary 
-	modified := bytes.ReplaceAll(data, []byte("http://localhost:8080"), []byte(scheme + "://" + r.Host))
+	modified := bytes.ReplaceAll(data, []byte("http://localhost:8080"), []byte(newHost))
 	w.Write(modified)
 }
 
