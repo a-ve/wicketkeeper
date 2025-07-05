@@ -23,7 +23,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GH_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,10 +39,11 @@ jobs:
 
       - name: Generate changelog for the current tag
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
         run: |
           git-cliff --current \
-                    --config=cliff.toml \
+                    --config cliff.toml \
                     --output /tmp/NOTES.md \
                     --verbose
 
@@ -76,7 +77,7 @@ jobs:
           version: "~> v2"
           args: release --clean --release-notes /tmp/NOTES.md
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.GH_TOKEN }}
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           REPO_OWNER: ${{ github.repository_owner }}
