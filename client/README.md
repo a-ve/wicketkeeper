@@ -34,7 +34,7 @@ Wicketkeeper is designed to be a privacy-friendly and user-centric alternative t
 
 2.  **Build the client script:**
 
-    You can build the client with either the `fast` (default) or `slow` solver. The output will be a single file: `dist/wicketkeeper.js`.
+    You can build the client with either the `fast` (default) or `slow` solver. The output will be a single file: `dist/fast.js` or `dist/slow.js`.
 
     - **For the fast, multi-threaded solver (Recommended):**
 
@@ -59,14 +59,14 @@ CHALLENGE_URL='https://api.your-domain.com/captcha/challenge' npm run build:fast
 
 ## Usage
 
-After building `dist/wicketkeeper.js`, include it in your HTML file and add the widget to your form.
+After building the client, include it in your HTML file and add the widget to your form.
 
 ### 1. Include the Script
 
 Place the script tag at the end of your `<body>`.
 
 ```html
-<script src="path/to/dist/wicketkeeper.js"></script>
+<script src="path/to/dist/fast-or-slow.js"></script>
 ```
 
 ### 2. Add the Widget to Your Form
@@ -95,7 +95,7 @@ You can configure it using `data-*` attributes:
 
 ### Styling
 
-The widget's CSS is bundled directly into the `wicketkeeper.js` file. It includes support for dark mode via the `prefers-color-scheme: dark` media query.
+The widget's CSS is bundled directly into the generated client. It includes support for dark mode via the `prefers-color-scheme: dark` media query.
 
 To force dark mode, you can add the `.wk-dark` class to the widget or a parent element.
 

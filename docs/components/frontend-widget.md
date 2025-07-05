@@ -49,6 +49,7 @@ First, you need to build the client script from the source. The build process bu
 
     ```bash
     # Replace the URL with your actual production endpoint
+    # You can use `npm run build:fast` or `npm run build:slow` to build the solver of your choice.
     CHALLENGE_URL='https://captcha.your-domain.com/v0/challenge' npm run build:fast
     ```
 
