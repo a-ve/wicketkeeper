@@ -4,11 +4,13 @@ services:
   wicketkeeper:
     user: "${UID}:${GID}"
     build: .
+    # image: ghcr.io/a-ve/wicketkeeper:latest
     container_name: wicketkeeper-app
     restart: unless-stopped
     ports:
       - "8080:8080"
     environment:
+      - ROOT_URL=http://localhost:8080 # Used when serve js via server (to override the default url)
       - LISTEN_PORT=8080
       - REDIS_ADDR=redis:6379
       - DIFFICULTY=4

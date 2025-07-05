@@ -1,0 +1,45 @@
+version: 2
+
+project_name: wicketkeeper
+
+builds:
+  - dir: ./server
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - "-s -w"
+
+dockers:
+  - dockerfile: Dockerfile.release
+    goos: linux
+    goarch: arm64
+    build_flag_templates:
+      - "--pull"
+      - "--platform=linux/arm64"
+    image_templates:
+      - "ghcr.io/{{ .Env.REPO_OWNER }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
+      - "ghcr.io/{{ .Env.REPO_OWNER }}/{{ .ProjectName }}:latest-arm64"
+  - dockerfile: Dockerfile.release
+    goos: linux
+    goarch: amd64
+    build_flag_templates:
+      - "--pull"
+      - "--platform=linux/amd64"
+    image_templates:
+      - "ghcr.io/{{ .Env.REPO_OWNER }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Env.REPO_OWNER }}/{{ .ProjectName }}:latest-amd64"
+
+docker_manifests:
+  # https://goreleaser.com/customization/docker_manifest/
+  - name_template: "ghcr.io/{{ .Env.REPO_OWNER }}/{{ .ProjectName }}:v{{ .Version }}"
+    image_templates:
+      - "ghcr.io/{{ .Env.REPO_OWNER }}/{{ .ProjectName }}:v{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Env.REPO_OWNER }}/{{ .ProjectName }}:v{{ .Version }}-arm64"
+  - name_template: "ghcr.io/{{ .Env.REPO_OWNER }}/{{ .ProjectName }}:latest"
+    image_templates:
+      - "ghcr.io/{{ .Env.REPO_OWNER }}/{{ .ProjectName }}:latest-amd64"
+      - "ghcr.io/{{ .Env.REPO_OWNER }}/{{ .ProjectName }}:latest-arm64"
+
+checksum:
+  name_template: "checksums.txt"
