@@ -40,9 +40,10 @@ jobs:
       - name: Generate changelog for the current tag
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
         run: |
           git-cliff --current \
-                    --config=cliff.toml \
+                    --config cliff.toml \
                     --output /tmp/NOTES.md \
                     --verbose
 
