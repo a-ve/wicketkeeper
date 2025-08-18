@@ -128,8 +128,7 @@ import { solver } from "solver";
       .forEach((el) => {
         el.dataset.initialised = "true";
         const opts = {};
-        if (el.dataset.challengeUrl)
-          opts.endpoints = { challenge: el.dataset.challengeUrl };
+        if (el.dataset.challengeUrl) opts.endpoints = { challenge: el.dataset.challengeUrl };
         if (el.dataset.inputName) opts.inputName = el.dataset.inputName;
         if (el.dataset.callback) opts.onSolved = window[el.dataset.callback];
         render(el, opts);
