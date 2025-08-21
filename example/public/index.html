@@ -11,22 +11,26 @@
   </head>
   <body>
     <h1>Sign up</h1>
-    <form action="http://localhost:8081/submit" method="POST">
-      <div>
-        <label>
-          Name:
-          <input type="text" name="name" required />
-        </label>
-      </div>
-      <div>
-        <label>
-          Email:
-          <input type="email" name="email" required />
-        </label>
-      </div>
+    <p id="responseCaptcha"></p>
+    <form id="formCaptcha" action="http://localhost:8081/submit" method="POST">
       <div class="wicketkeeper" data-input-name="wicketkeeper_response"></div>
       <br />
       <button type="submit">Submit</button>
+      <button type="button" onclick="onReset()">Reset</button>
     </form>
+    <script>
+      formCaptcha.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const response = await fetch(event.target.action, {
+          method: event.target.method,
+          body: new URLSearchParams(new FormData(event.target)),
+        })
+        responseCaptcha.innerText = await response.text();
+      });
+      function onReset() {
+        document.querySelectorAll('.wicketkeeper').forEach((el) => el.wicketkeeperReset());
+      }
+    </script>
   </body>
 </html>
