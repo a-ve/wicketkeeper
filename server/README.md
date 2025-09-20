@@ -81,6 +81,7 @@ The server is configured using environment variables. You can create a `.env` fi
 | ------------------ | ---------------------------------------------------------------------------------------------------------- | -------------------- | ----------------------------------------------- |
 | `LISTEN_PORT`      | The port on which the server will listen for requests.                                                     | `8080`               | `8080`                                          |
 | `REDIS_ADDR`       | The address of the Redis instance.                                                                         | `127.0.0.1:6379`     | `localhost:6379`                                |
+| `REDIS_DB`         | Redis database number (0-15).                                                                              | `0`                  | `1`                                             |
 | `DIFFICULTY`       | The number of leading zeros required in the PoW hash. Higher is harder.                                    | `4`                  | `5`                                             |
 | `ALLOWED_ORIGINS`  | Comma-separated list of origins allowed for CORS. Use `*` for all. Supports wildcards like `*.domain.com`. | `*`                  | `https://myapp.com,https://*.staging.myapp.com` |
 | `PRIVATE_KEY_PATH` | Path to the file where the Ed25519 private key is stored. It will be created if it doesn't exist.          | `./wicketkeeper.key` | `/etc/secrets/wicketkeeper.key`                 |

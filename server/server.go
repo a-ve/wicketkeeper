@@ -20,9 +20,10 @@ type Server struct {
 	checkAddScript *redis.Script      // Lua script for atomically checking and adding CIDs to Bloom filters.
 }
 
-func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateKey, pubKey ed25519.PublicKey, redisAddr string) (*Server, error) {
+func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateKey, pubKey ed25519.PublicKey, redisAddr string, redisDB int) (*Server, error) {
 	rdb := redis.NewClient(&redis.Options{
 		Addr: redisAddr,
+		DB:   redisDB,
 	})
 
 	var checkAddScript = redis.NewScript(`
@@ -38,10 +39,10 @@ func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateK
 	defer cancel()
 
 	if _, err := rdb.Ping(ctx).Result(); err != nil {
-		log.Printf("Could not connect to Redis at %s: %v", redisAddr, err)
-		return nil, fmt.Errorf("could not connect to Redis at %s: %w", redisAddr, err)
+		log.Printf("Could not connect to Redis at %s DB %d: %v", redisAddr, redisDB, err)
+		return nil, fmt.Errorf("could not connect to Redis at %s DB %d: %w", redisAddr, redisDB, err)
 	}
-	log.Printf("Successfully connected to Redis at %s.", redisAddr)
+	log.Printf("Successfully connected to Redis at %s DB %d.", redisAddr, redisDB)
 
 	_, err := rdb.Do(ctx, "BF.RESERVE", "test_bloom_support", 0.01, 1000, "NONSCALING").Result()
 	if err != nil {
