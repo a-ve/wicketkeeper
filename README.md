@@ -166,7 +166,7 @@ The server is configured via environment variables. See `server/README.md` for m
 | ------------------ | --------------------------------------------------------------------------- | -------------------- |
 | `LISTEN_PORT`      | The port on which the server will listen.                                   | `8080`               |
 | `REDIS_ADDR`       | The address of the Redis instance.                                          | `127.0.0.1:6379`     |
-| `REDIS_DB`         | Redis database number (0-15).                                               | `0`                  |
+| `REDIS_DB`         | Redis database number (0-15). **Note:** Redis Cluster only supports DB 0.   | `0`                  |
 | `DIFFICULTY`       | Number of leading zeros for the PoW hash. Higher is harder.                 | `4`                  |
 | `ALLOWED_ORIGINS`  | Comma-separated list of origins for CORS (e.g., `https://domain.com`).      | `*`                  |
 | `PRIVATE_KEY_PATH` | Path to store the Ed25519 private key. Will be created if it doesn't exist. | `./wicketkeeper.key` |
