@@ -39,18 +39,14 @@ import { solver } from "solver";
     container.setAttribute("tabindex", "0");
     container.classList.add("wicketkeeper");
     container.innerHTML = `
-      <div class="wicketkeeper-left">
-        <div class="wicketkeeper-indicator">
-          <svg class="wicketkeeper-check" viewBox="0 0 24 24">
-            <polyline points="5 13 9 17 19 7"/>
-          </svg>
-          <div class="wicketkeeper-spinner"></div>
-        </div>
-        <span class="wicketkeeper-message">${DEFAULT_MESSAGE}</span>
+      <div class="wicketkeeper-indicator">
+        <svg class="wicketkeeper-check" viewBox="0 0 24 24" width="15" height="15" fill="none">
+          <path stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="m5 13 4 4L19 7"/>
+        </svg>
+        <div class="wicketkeeper-spinner"></div>
       </div>
+      <span class="wicketkeeper-message">${DEFAULT_MESSAGE}</span>
     `;
-
-    const indicator = $(".wicketkeeper-indicator", container);
     const msgEl = $(".wicketkeeper-message", container);
 
     const hiddenInput = document.createElement("input");
@@ -60,9 +56,8 @@ import { solver } from "solver";
     container.appendChild(hiddenInput);
 
     function setLoading(on) {
-      indicator.classList.toggle("loading", on);
+      container.classList.toggle("loading", on);
       container.setAttribute("aria-disabled", String(on));
-      container.style.pointerEvents = on ? "none" : "auto";
     }
 
     function flashError(text) {
@@ -77,8 +72,7 @@ import { solver } from "solver";
 
     function reset() {
       setLoading(false);
-      indicator.classList.remove("loading", "success");
-      container.classList.remove("success");
+      container.classList.remove("loading", "success");
       msgEl.textContent = DEFAULT_MESSAGE;
       hiddenInput.value = "";
       delete container.dataset.wicketkeeperSolution;
@@ -94,7 +88,6 @@ import { solver } from "solver";
         const { nonce, response } = await solver(ch);
 
         msgEl.textContent = "Verified!";
-        indicator.classList.add("success");
         container.classList.add("success");
         setLoading(false);
 
@@ -102,7 +95,6 @@ import { solver } from "solver";
         container.dataset.wicketkeeperSolution = JSON.stringify(solved);
         hiddenInput.value = JSON.stringify(solved);
         options.onSolved?.(solved);
-        options.callback?.(solved);
       } catch (err) {
         console.error(err);
         flashError(err.message);
@@ -115,8 +107,8 @@ import { solver } from "solver";
 
     function clickHandler() {
       if (
-        indicator.classList.contains("loading") ||
-        indicator.classList.contains("success")
+        container.classList.contains("loading") ||
+        container.classList.contains("success")
       )
         return;
       solve();
@@ -136,10 +128,9 @@ import { solver } from "solver";
       .forEach((el) => {
         el.dataset.initialised = "true";
         const opts = {};
-        if (el.dataset.challengeUrl)
-          opts.endpoints = { challenge: el.dataset.challengeUrl };
+        if (el.dataset.challengeUrl) opts.endpoints = { challenge: el.dataset.challengeUrl };
         if (el.dataset.inputName) opts.inputName = el.dataset.inputName;
-        if (el.dataset.callback) opts.callback = window[el.dataset.callback];
+        if (el.dataset.callback) opts.onSolved = window[el.dataset.callback];
         render(el, opts);
       });
   }

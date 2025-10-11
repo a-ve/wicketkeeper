@@ -12,18 +12,18 @@ services:
     environment:
       - ROOT_URL=http://localhost:8080 # Used when serve js via server (to override the default url)
       - LISTEN_PORT=8080
-      - REDIS_ADDR=redis:6379
+      - REDIS_ADDR=wicketkeeper-redis:6379
       - DIFFICULTY=4
       - ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,*
-      - PRIVATE_KEY_PATH=/data/wicketkeeper.key
+      - PRIVATE_KEY_PATH=/data/wicketkeeper.key # generated on first start
     volumes:
       - ./data:/data
     depends_on:
-      - redis
+      - wicketkeeper-redis
     networks:
       - wicketkeeper-net
 
-  redis:
+  wicketkeeper-redis:
     image: redis/redis-stack-server:latest
     container_name: wicketkeeper-redis
     restart: unless-stopped
