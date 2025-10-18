@@ -4,7 +4,7 @@ const webpack = require("webpack");
 module.exports = (env = {}) => {
   const solverType = env.solver || "fast";
   const challengeUrl = JSON.stringify(
-    env.CHALLENGE_URL || "http://localhost:8080/v0/challenge"
+    process.env.CHALLENGE_URL || "http://localhost:8080/v0/challenge"
   );
 
   return {
