@@ -61,7 +61,7 @@ jobs:
       - name: Install npm dependencies and run script
         run: |
           cd client
-          npm install
+          npm ci
           npm run build:fast
           npm run build:slow
           mv dist/ ../server/static
