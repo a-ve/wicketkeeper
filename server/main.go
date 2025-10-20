@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"crypto/ed25519"
 	"crypto/rand"
@@ -11,8 +10,11 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
+	"path"
+	"slices"
 	"strconv"
 	"strings"
 	"syscall"
@@ -26,22 +28,22 @@ var assets embed.FS
 var FS, _ = fs.Sub(assets, "static")
 
 func serveJS(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Cache-Control", "public, max-age=2628000") // 1 month
+	w.Header().Set("Cache-Control", "public, max-age=2628000")
 	w.Header().Set("Content-Type", "application/javascript")
 
-	data, err := fs.ReadFile(FS, r.URL.Path[1:]) // Path only have 2 value /fast.js and /slow.js
-	if err != nil {
-		http.Error(w, "failed to read file", http.StatusInternalServerError)
-		return
+	// After StripPrefix, r.URL.Path should be "/fast.js" or "/slow.js".
+	name := path.Base(r.URL.Path)
+	switch name {
+	case "fast.js", "slow.js":
+		data, err := fs.ReadFile(FS, name)
+		if err != nil {
+			http.Error(w, "failed to read file", http.StatusInternalServerError)
+			return
+		}
+		_, _ = w.Write(data)
+	default:
+		http.NotFound(w, r)
 	}
-	newHost := os.Getenv("ROOT_URL")
-	if newHost == "" {
-		w.Write(data)
-		return
-	}
-	// Change the default challenge URL when served by Go binary
-	modified := bytes.ReplaceAll(data, []byte("http://localhost:8080"), []byte(newHost))
-	w.Write(modified)
 }
 
 func loadOrGeneratePrivateKey(filePath string) (ed25519.PrivateKey, ed25519.PublicKey, error) {
@@ -133,6 +135,33 @@ func main() {
 		log.Printf("REDIS_DB configured: %d", redisDB)
 	}
 
+	root := os.Getenv("ROOT_URL")
+	if root == "" {
+		root = "http://localhost:8080"
+	}
+
+	u, err := url.Parse(root)
+	if err != nil || u.Scheme == "" || u.Host == "" {
+		log.Fatalf("Invalid ROOT_URL: %q", root)
+	}
+
+	origin := u.Scheme + "://" + u.Host
+	basePath := strings.TrimRight(u.Path, "/")
+	if basePath == "/" {
+		basePath = ""
+	}
+	if basePath != "" && !strings.HasPrefix(basePath, "/") {
+		basePath = "/" + basePath
+	}
+
+	log.Printf("ROOT_URL configured: %s", root)
+	log.Printf("Public origin: %s", origin)
+	if basePath == "" {
+		log.Printf("Mounted at base path: /")
+	} else {
+		log.Printf("Mounted at base path: %s", basePath)
+	}
+
 	srv, err := NewServer(difficulty, allowedOriginsList, privKey, pubKey, redisAddr, redisDB)
 	if err != nil {
 		log.Fatalf("Failed to initialize server: %v", err)
@@ -146,22 +175,36 @@ func main() {
 
 	log.Printf("Captcha Service Public Key (hex): %s", hex.EncodeToString(pubKey))
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/v0/challenge", srv.BuildChallenge)
-	mux.HandleFunc("/v0/siteverify", srv.VerifyChallenge)
-	mux.HandleFunc("/fast.js", serveJS)
-	mux.HandleFunc("/slow.js", serveJS)
+	sub := http.NewServeMux()
+	sub.HandleFunc("/v0/challenge", srv.BuildChallenge)
+	sub.HandleFunc("/v0/siteverify", srv.VerifyChallenge)
+	sub.HandleFunc("/fast.js", serveJS)
+	sub.HandleFunc("/slow.js", serveJS)
 
-	c := cors.New(cors.Options{
-		AllowedOrigins: srv.allowedOrigins,
+	var handler http.Handler = sub
+	if basePath != "" && basePath != "/" {
+		handler = http.StripPrefix(basePath, sub)
+	}
+
+	allowed := append([]string{}, srv.allowedOrigins...)
+	if len(allowed) == 0 {
+		allowed = []string{"*"}
+	}
+	if !(len(allowed) == 1 && allowed[0] == "*") {
+		found := slices.Contains(allowed, origin)
+		if !found {
+			allowed = append(allowed, origin)
+		}
+	}
+
+	handler = cors.New(cors.Options{
+		AllowedOrigins: allowed,
 		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodOptions},
 		AllowedHeaders: []string{"Content-Type", "X-Requested-With"},
 		ExposedHeaders: []string{},
 		MaxAge:         3600,
 		Debug:          os.Getenv("CORS_DEBUG") == "true",
-	})
-
-	handler := c.Handler(mux)
+	}).Handler(handler)
 
 	stopChan := make(chan os.Signal, 1)
 	signal.Notify(stopChan, os.Interrupt, syscall.SIGTERM)
