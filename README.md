@@ -169,7 +169,7 @@ The server is configured via environment variables. See `server/README.md` for m
 | `REDIS_DB`         | Redis database number (0-15). **Note:** Redis Cluster only supports DB 0.                                                                                                                              | `0`                  |
 | `DIFFICULTY`       | Number of leading zeros for the PoW hash. Higher is harder.                                                                                                                                            | `4`                  |
 | `ALLOWED_ORIGINS`  | Comma-separated list of origins for CORS (e.g., `https://domain.com`).                                                                                                                                 | `*`                  |
-| `BASE_PATH`        | Base path for the server. Note: For paths other than `/` you should use `data-challenge-url` when using the client. See [here](https://wicketkeeper.io/components/frontend-widget.html#configuration). | `/captcha`           |
+| `BASE_PATH`        | Base path for the server. Note: For paths other than `/` you should use `data-challenge-url` when using the client. See [here](https://wicketkeeper.io/components/frontend-widget.html#configuration). | `/`           |
 | `PRIVATE_KEY_PATH` | Path to store the Ed25519 private key. Will be created if it doesn't exist.                                                                                                                            | `./wicketkeeper.key` |
 
 **API Endpoints:**
