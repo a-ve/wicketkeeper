@@ -162,15 +162,15 @@ You can now navigate to **<http://localhost:8081>** in your browser to see the W
 
 The server is configured via environment variables. See `server/README.md` for more details.
 
-| Variable           | Description                                                                                              | Default                 |
-| ------------------ | -------------------------------------------------------------------------------------------------------- | ----------------------- |
-| `LISTEN_PORT`      | The port on which the server will listen.                                                                | `8080`                  |
-| `REDIS_ADDR`       | The address of the Redis instance.                                                                       | `127.0.0.1:6379`        |
-| `REDIS_DB`         | Redis database number (0-15). **Note:** Redis Cluster only supports DB 0.                                | `0`                     |
-| `DIFFICULTY`       | Number of leading zeros for the PoW hash. Higher is harder.                                              | `4`                     |
-| `ALLOWED_ORIGINS`  | Comma-separated list of origins for CORS (e.g., `https://domain.com`).                                   | `*`                     |
-| `ROOT_URL`         | Public base URL (scheme + host, optional path prefix) used by the client JS and to derive the base path. | `http://localhost:8080` |
-| `PRIVATE_KEY_PATH` | Path to store the Ed25519 private key. Will be created if it doesn't exist.                              | `./wicketkeeper.key`    |
+| Variable           | Description                                                                                                                                                                                            | Default              |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------- |
+| `LISTEN_PORT`      | The port on which the server will listen.                                                                                                                                                              | `8080`               |
+| `REDIS_ADDR`       | The address of the Redis instance.                                                                                                                                                                     | `127.0.0.1:6379`     |
+| `REDIS_DB`         | Redis database number (0-15). **Note:** Redis Cluster only supports DB 0.                                                                                                                              | `0`                  |
+| `DIFFICULTY`       | Number of leading zeros for the PoW hash. Higher is harder.                                                                                                                                            | `4`                  |
+| `ALLOWED_ORIGINS`  | Comma-separated list of origins for CORS (e.g., `https://domain.com`).                                                                                                                                 | `*`                  |
+| `BASE_PATH`        | Base path for the server. Note: For paths other than `/` you should use `data-challenge-url` when using the client. See [here](https://wicketkeeper.io/components/frontend-widget.html#configuration). | `/captcha`           |
+| `PRIVATE_KEY_PATH` | Path to store the Ed25519 private key. Will be created if it doesn't exist.                                                                                                                            | `./wicketkeeper.key` |
 
 **API Endpoints:**
 

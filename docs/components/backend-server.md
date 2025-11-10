@@ -73,16 +73,16 @@ If you prefer to run the server directly without Docker:
 
 The server is configured entirely through environment variables.
 
-| Variable          | Description                                                                                                                 | Default                 |
-| :---------------- | :-------------------------------------------------------------------------------------------------------------------------- | :---------------------- |
-| `LISTEN_PORT`     | The port on which the server will listen for HTTP requests.                                                                 | `8080`                  |
-| `REDIS_ADDR`      | The address (host:port) of the Redis instance.                                                                              | `127.0.0.1:6379`        |
-| `REDIS_DB`        | Redis database number (0-15). **Note:** Redis Cluster only supports DB 0.                                                   | `0`                     |
-| `DIFFICULTY`      | The number of leading zero nibbles (4-bit chunks) for the PoW hash. A higher number increases the computational difficulty. | `4`                     |
-| `ALLOWED_ORIGINS` | A comma-separated list of origins allowed for Cross-Origin Resource Sharing (CORS). Use `*` to allow all origins.           | `*`                     |
-| `ROOT_URL`        | Public base URL (scheme + host, optional path prefix) used by the client JS and to derive the base path.                    | `http://localhost:8080` |
-| `PRIVATE_KEY_PATH` | Path to the file where the Ed25519 private key is stored. It will be created if it doesn't exist. | `./wicketkeeper.key` |
-| `CORS_DEBUG` | Set to `true` to enable verbose CORS debugging logs. | `false` |
+| Variable           | Description                                                                                                                                                                                            | Default              |
+| :----------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------- |
+| `LISTEN_PORT`      | The port on which the server will listen for HTTP requests.                                                                                                                                            | `8080`               |
+| `REDIS_ADDR`       | The address (host:port) of the Redis instance.                                                                                                                                                         | `127.0.0.1:6379`     |
+| `REDIS_DB`         | Redis database number (0-15). **Note:** Redis Cluster only supports DB 0.                                                                                                                              | `0`                  |
+| `DIFFICULTY`       | The number of leading zero nibbles (4-bit chunks) for the PoW hash. A higher number increases the computational difficulty.                                                                            | `4`                  |
+| `ALLOWED_ORIGINS`  | A comma-separated list of origins allowed for Cross-Origin Resource Sharing (CORS). Use `*` to allow all origins.                                                                                      | `*`                  |
+| `BASE_PATH`        | Base path for the server. Note: For paths other than `/` you should use `data-challenge-url` when using the client. See [here](https://wicketkeeper.io/components/frontend-widget.html#configuration). | `/`           |
+| `PRIVATE_KEY_PATH` | Path to the file where the Ed25519 private key is stored. It will be created if it doesn't exist.                                                                                                      | `./wicketkeeper.key` |
+| `CORS_DEBUG`       | Set to `true` to enable verbose CORS debugging logs.                                                                                                                                                   | `false`              |
 
 ### Example `.env` file for `docker-compose`
 

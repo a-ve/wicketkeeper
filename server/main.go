@@ -10,11 +10,9 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"os/signal"
 	"path"
-	"slices"
 	"strconv"
 	"strings"
 	"syscall"
@@ -135,30 +133,24 @@ func main() {
 		log.Printf("REDIS_DB configured: %d", redisDB)
 	}
 
-	root := os.Getenv("ROOT_URL")
-	if root == "" {
-		root = "http://localhost:8080"
-	}
-
-	u, err := url.Parse(root)
-	if err != nil || u.Scheme == "" || u.Host == "" {
-		log.Fatalf("Invalid ROOT_URL: %q", root)
-	}
-
-	origin := u.Scheme + "://" + u.Host
-	basePath := strings.TrimRight(u.Path, "/")
-	if basePath == "/" {
+	// BASE_PATH is a path prefix only (e.g., "/captcha"). Empty or "/" mounts at root.
+	basePath := os.Getenv("BASE_PATH")
+	basePath = strings.TrimSpace(basePath)
+	switch basePath {
+	case "", "/":
 		basePath = ""
-	}
-	if basePath != "" && !strings.HasPrefix(basePath, "/") {
-		basePath = "/" + basePath
+	default:
+		if !strings.HasPrefix(basePath, "/") {
+			basePath = "/" + basePath
+		}
+		basePath = strings.TrimRight(basePath, "/")
 	}
 
-	log.Printf("ROOT_URL configured: %s", root)
-	log.Printf("Public origin: %s", origin)
 	if basePath == "" {
+		log.Printf("BASE_PATH configured: /")
 		log.Printf("Mounted at base path: /")
 	} else {
+		log.Printf("BASE_PATH configured: %s", basePath)
 		log.Printf("Mounted at base path: %s", basePath)
 	}
 
@@ -189,12 +181,6 @@ func main() {
 	allowed := append([]string{}, srv.allowedOrigins...)
 	if len(allowed) == 0 {
 		allowed = []string{"*"}
-	}
-	if !(len(allowed) == 1 && allowed[0] == "*") {
-		found := slices.Contains(allowed, origin)
-		if !found {
-			allowed = append(allowed, origin)
-		}
 	}
 
 	handler = cors.New(cors.Options{
