@@ -136,20 +136,17 @@ func main() {
 	// BASE_PATH is a path prefix only (e.g., "/captcha"). Empty or "/" mounts at root.
 	basePath := os.Getenv("BASE_PATH")
 	basePath = strings.TrimSpace(basePath)
+
 	switch basePath {
 	case "", "/":
 		basePath = ""
+		log.Printf("BASE_PATH configured: /")
+		log.Printf("Mounted at base path: /")
 	default:
 		if !strings.HasPrefix(basePath, "/") {
 			basePath = "/" + basePath
 		}
 		basePath = strings.TrimRight(basePath, "/")
-	}
-
-	if basePath == "" {
-		log.Printf("BASE_PATH configured: /")
-		log.Printf("Mounted at base path: /")
-	} else {
 		log.Printf("BASE_PATH configured: %s", basePath)
 		log.Printf("Mounted at base path: %s", basePath)
 	}
@@ -174,7 +171,7 @@ func main() {
 	sub.HandleFunc("/slow.js", serveJS)
 
 	var handler http.Handler = sub
-	if basePath != "" && basePath != "/" {
+	if basePath != "" {
 		handler = http.StripPrefix(basePath, sub)
 	}
 
