@@ -141,14 +141,12 @@ func main() {
 	case "", "/":
 		basePath = ""
 		log.Printf("BASE_PATH configured: /")
-		log.Printf("Mounted at base path: /")
 	default:
 		if !strings.HasPrefix(basePath, "/") {
 			basePath = "/" + basePath
 		}
 		basePath = strings.TrimRight(basePath, "/")
 		log.Printf("BASE_PATH configured: %s", basePath)
-		log.Printf("Mounted at base path: %s", basePath)
 	}
 
 	srv, err := NewServer(difficulty, allowedOriginsList, privKey, pubKey, redisAddr, redisDB)
@@ -162,7 +160,7 @@ func main() {
 		}
 	}()
 
-	log.Printf("Captcha Service Public Key (hex): %s", hex.EncodeToString(pubKey))
+	log.Printf("wicketkeeper public key (hex): %s", hex.EncodeToString(pubKey))
 
 	sub := http.NewServeMux()
 	sub.HandleFunc("/v0/challenge", srv.BuildChallenge)
