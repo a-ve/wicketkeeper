@@ -58,15 +58,6 @@ A simple Express + TypeScript demo showing how to integrate Wicketkeeper into a 
    docker compose up -d
    ```
 
-3. **Build the front‑end widget**
-
-   ```bash
-   cd client
-   npm install
-   npm run build:fast
-   cp dist/wicketkeeper.js ../example/public/
-   ```
-
 ---
 
 ## Configuration
@@ -91,8 +82,7 @@ example/
 ├─ package-lock.json
 ├─ tsconfig.json
 ├─ public/
-│  ├─ index.html
-│  └─ wicketkeeper.js      ← Built client script
+│  └─ index.html
 ├─ src/
 │  └─ server.ts            ← Express server & verification logic
 └─ dist/                   ← Compiled JavaScript output
