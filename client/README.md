@@ -76,6 +76,7 @@ Add a `<div>` with the class `.wicketkeeper` inside your form. The script will a
 You can configure it using `data-*` attributes:
 
 - `data-input-name`: (Optional) Sets the `name` attribute of the hidden input field. Defaults to `wicketkeeper_solution`.
+- `data-challenge-url`: (Optional) Overrides the challenge URL that was compiled into the script. Useful for testing or dynamic environments.
 
 **Example:**
 
@@ -85,7 +86,11 @@ You can configure it using `data-*` attributes:
   <textarea id="comment" name="comment"></textarea>
 
   <!-- Wicketkeeper widget -->
-  <div class="wicketkeeper" data-input-name="captcha_solution"></div>
+  <div
+    class="wicketkeeper"
+    data-input-name="captcha_solution"
+    data-challenge-url="http://localhost:8080/v0/challenge"
+  ></div>
 
   <button type="submit">Post Comment</button>
 </form>

@@ -13,23 +13,29 @@
     <h1>Sign up</h1>
     <p id="responseCaptcha"></p>
     <form id="formCaptcha" action="http://localhost:8081/submit" method="POST">
-      <div class="wicketkeeper" data-input-name="wicketkeeper_response"></div>
+      <div
+        class="wicketkeeper"
+        data-input-name="wicketkeeper_response"
+        data-challenge-url="http://localhost:8080/v0/challenge"
+      ></div>
       <br />
       <button type="submit">Submit</button>
       <button type="button" onclick="onReset()">Reset</button>
     </form>
     <script>
-      formCaptcha.addEventListener('submit', async (event) => {
+      formCaptcha.addEventListener("submit", async (event) => {
         event.preventDefault();
         event.stopPropagation();
         const response = await fetch(event.target.action, {
           method: event.target.method,
           body: new URLSearchParams(new FormData(event.target)),
-        })
+        });
         responseCaptcha.innerText = await response.text();
       });
       function onReset() {
-        document.querySelectorAll('.wicketkeeper').forEach((el) => el.wicketkeeperReset());
+        document
+          .querySelectorAll(".wicketkeeper")
+          .forEach((el) => el.wicketkeeperReset());
       }
     </script>
   </body>
