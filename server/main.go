@@ -10,11 +10,9 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"os/signal"
 	"path"
-	"slices"
 	"strconv"
 	"strings"
 	"syscall"
@@ -135,31 +133,20 @@ func main() {
 		log.Printf("REDIS_DB configured: %d", redisDB)
 	}
 
-	root := os.Getenv("ROOT_URL")
-	if root == "" {
-		root = "http://localhost:8080"
-	}
+	// BASE_PATH is a path prefix only (e.g., "/captcha"). Empty or "/" mounts at root.
+	basePath := os.Getenv("BASE_PATH")
+	basePath = strings.TrimSpace(basePath)
 
-	u, err := url.Parse(root)
-	if err != nil || u.Scheme == "" || u.Host == "" {
-		log.Fatalf("Invalid ROOT_URL: %q", root)
-	}
-
-	origin := u.Scheme + "://" + u.Host
-	basePath := strings.TrimRight(u.Path, "/")
-	if basePath == "/" {
+	switch basePath {
+	case "", "/":
 		basePath = ""
-	}
-	if basePath != "" && !strings.HasPrefix(basePath, "/") {
-		basePath = "/" + basePath
-	}
-
-	log.Printf("ROOT_URL configured: %s", root)
-	log.Printf("Public origin: %s", origin)
-	if basePath == "" {
-		log.Printf("Mounted at base path: /")
-	} else {
-		log.Printf("Mounted at base path: %s", basePath)
+		log.Printf("BASE_PATH configured: /")
+	default:
+		if !strings.HasPrefix(basePath, "/") {
+			basePath = "/" + basePath
+		}
+		basePath = strings.TrimRight(basePath, "/")
+		log.Printf("BASE_PATH configured: %s", basePath)
 	}
 
 	srv, err := NewServer(difficulty, allowedOriginsList, privKey, pubKey, redisAddr, redisDB)
@@ -173,7 +160,7 @@ func main() {
 		}
 	}()
 
-	log.Printf("Captcha Service Public Key (hex): %s", hex.EncodeToString(pubKey))
+	log.Printf("wicketkeeper public key (hex): %s", hex.EncodeToString(pubKey))
 
 	sub := http.NewServeMux()
 	sub.HandleFunc("/v0/challenge", srv.BuildChallenge)
@@ -182,19 +169,13 @@ func main() {
 	sub.HandleFunc("/slow.js", serveJS)
 
 	var handler http.Handler = sub
-	if basePath != "" && basePath != "/" {
+	if basePath != "" {
 		handler = http.StripPrefix(basePath, sub)
 	}
 
 	allowed := append([]string{}, srv.allowedOrigins...)
 	if len(allowed) == 0 {
 		allowed = []string{"*"}
-	}
-	if !(len(allowed) == 1 && allowed[0] == "*") {
-		found := slices.Contains(allowed, origin)
-		if !found {
-			allowed = append(allowed, origin)
-		}
 	}
 
 	handler = cors.New(cors.Options{
