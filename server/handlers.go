@@ -116,8 +116,8 @@ func (s *Server) VerifyChallenge(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		req = VerifyRequestBody{
-			Token:   r.FormValue("token"),
-			Nonce:   r.FormValue("nonce"),
+			Token:    r.FormValue("token"),
+			Nonce:    r.FormValue("nonce"),
 			Response: r.FormValue("response"),
 		}
 	} else {
@@ -189,7 +189,8 @@ func (s *Server) VerifyChallenge(w http.ResponseWriter, r *http.Request) {
 	sliceKey := bloomKey(iatTime)
 
 	if err := s.ensureBloom(ctx, sliceKey); err != nil {
-		http.Error(w, "bloom filter initialization error: "+err.Error(), http.StatusInternalServerError)
+		log.Printf("Redis bloom filter initialization error: %v", err)
+		http.Error(w, "server error during replay verification", http.StatusInternalServerError)
 		return
 	}
 
@@ -199,7 +200,7 @@ func (s *Server) VerifyChallenge(w http.ResponseWriter, r *http.Request) {
 	).Int()
 	if err != nil {
 		log.Printf("Redis Lua script error: %v", err)
-		http.Error(w, "redis error during CID verification: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "server error during CID verification", http.StatusInternalServerError)
 		return
 	}
 	if added == 0 {
