@@ -129,7 +129,7 @@ func main() {
 
 	redisDBStr := os.Getenv("REDIS_DB")
 	redisDB, err := strconv.Atoi(redisDBStr)
-	if err != nil || redisDB < 0 || redisDB > 15 {
+	if err != nil || redisDB < 0 {
 		redisDB = 0
 		log.Printf("REDIS_DB not set or invalid ('%s'), using default: %d", redisDBStr, redisDB)
 	} else {
