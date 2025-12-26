@@ -27,7 +27,7 @@ const (
 
 func bloomKey(t time.Time) string {
 	rounded := t.UTC().Truncate(sliceDuration)
-	return fmt.Sprintf("captcha:spent:%s", rounded.Format("20060102T1504"))
+	return fmt.Sprintf("spent:%s", rounded.Format("20060102T1504"))
 }
 
 func (s *Server) ensureBloom(ctx context.Context, key string) error {
@@ -186,7 +186,7 @@ func (s *Server) VerifyChallenge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	iatTime := time.Unix(int64(iatF), 0).UTC()
-	sliceKey := bloomKey(iatTime)
+	sliceKey := s.redisPrefix + bloomKey(iatTime)
 
 	if err := s.ensureBloom(ctx, sliceKey); err != nil {
 		http.Error(w, "bloom filter initialization error: "+err.Error(), http.StatusInternalServerError)

@@ -136,6 +136,11 @@ func main() {
 		log.Printf("REDIS_DB configured: %d", redisDB)
 	}
 
+	redisPrefix, ok := os.LookupEnv("REDIS_PREFIX")
+	if !ok {
+		redisPrefix = "captcha:"
+	}
+
 	// BASE_PATH is a path prefix only (e.g., "/captcha"). Empty or "/" mounts at root.
 	basePath := os.Getenv("BASE_PATH")
 	basePath = strings.TrimSpace(basePath)
@@ -152,7 +157,7 @@ func main() {
 		log.Printf("BASE_PATH configured: %s", basePath)
 	}
 
-	srv, err := NewServer(difficulty, allowedOriginsList, privKey, pubKey, redisAddr, redisUser, redisPwd, redisDB)
+	srv, err := NewServer(difficulty, allowedOriginsList, privKey, pubKey, redisAddr, redisUser, redisPwd, redisDB, redisPrefix)
 	if err != nil {
 		log.Fatalf("Failed to initialize server: %v", err)
 	}

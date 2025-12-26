@@ -17,10 +17,11 @@ type Server struct {
 	difficulty     int                // Global PoW difficulty for challenges.
 	allowedOrigins []string           // List of allowed origins for CORS.
 	redisClient    *redis.Client      // Redis client for storing challenge state.
+	redisPrefix    string             // Prefix to prepend to all Redis keys.
 	checkAddScript *redis.Script      // Lua script for atomically checking and adding CIDs to Bloom filters.
 }
 
-func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateKey, pubKey ed25519.PublicKey, redisAddr, redisUser, redisPwd string, redisDB int) (*Server, error) {
+func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateKey, pubKey ed25519.PublicKey, redisAddr, redisUser, redisPwd string, redisDB int, redisPrefix string) (*Server, error) {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     redisAddr,
 		Username: redisUser,
@@ -46,7 +47,7 @@ func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateK
 	}
 	log.Printf("Successfully connected to Redis at %s DB %d.", redisAddr, redisDB)
 
-	_, err := rdb.Do(ctx, "BF.RESERVE", "test_bloom_support", 0.01, 1000, "NONSCALING").Result()
+	_, err := rdb.Do(ctx, "BF.RESERVE", redisPrefix+"test_bloom_support", 0.01, 1000, "NONSCALING").Result()
 	if err != nil {
 		if !strings.Contains(strings.ToLower(err.Error()), "item exists") {
 			log.Printf("WARNING: Redis Bloom filter module not available: %v", err)
@@ -54,7 +55,7 @@ func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateK
 			return nil, fmt.Errorf("redis bloom filter module not available: %w", err)
 		}
 	} else {
-		rdb.Del(ctx, "test_bloom_support")
+		rdb.Del(ctx, redisPrefix+"test_bloom_support")
 	}
 
 	return &Server{
@@ -63,6 +64,7 @@ func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateK
 		difficulty:     difficulty,
 		allowedOrigins: allowedOrigins,
 		redisClient:    rdb,
+		redisPrefix:    redisPrefix,
 		checkAddScript: checkAddScript,
 	}, nil
 }
