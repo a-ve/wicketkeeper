@@ -20,10 +20,12 @@ type Server struct {
 	checkAddScript *redis.Script      // Lua script for atomically checking and adding CIDs to Bloom filters.
 }
 
-func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateKey, pubKey ed25519.PublicKey, redisAddr string, redisDB int) (*Server, error) {
+func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateKey, pubKey ed25519.PublicKey, redisAddr, redisUser, redisPwd string, redisDB int) (*Server, error) {
 	rdb := redis.NewClient(&redis.Options{
-		Addr: redisAddr,
-		DB:   redisDB,
+		Addr:     redisAddr,
+		Username: redisUser,
+		Password: redisPwd,
+		DB:       redisDB,
 	})
 
 	var checkAddScript = redis.NewScript(`

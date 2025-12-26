@@ -124,6 +124,9 @@ func main() {
 		log.Printf("REDIS_ADDR not set, using default: %s", redisAddr)
 	}
 
+	redisUser := os.Getenv("REDIS_USER")
+	redisPwd := os.Getenv("REDIS_PASSWORD")
+
 	redisDBStr := os.Getenv("REDIS_DB")
 	redisDB, err := strconv.Atoi(redisDBStr)
 	if err != nil || redisDB < 0 || redisDB > 15 {
@@ -149,7 +152,7 @@ func main() {
 		log.Printf("BASE_PATH configured: %s", basePath)
 	}
 
-	srv, err := NewServer(difficulty, allowedOriginsList, privKey, pubKey, redisAddr, redisDB)
+	srv, err := NewServer(difficulty, allowedOriginsList, privKey, pubKey, redisAddr, redisUser, redisPwd, redisDB)
 	if err != nil {
 		log.Fatalf("Failed to initialize server: %v", err)
 	}
