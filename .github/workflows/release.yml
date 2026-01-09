@@ -65,6 +65,8 @@ jobs:
           npm run build:fast
           npm run build:slow
           mv dist/ ../server/static
+        env:
+          CHALLENGE_URL: ${{ vars.CHALLENGE_URL }}
 
       - name: Install go dependencies
         run: |
