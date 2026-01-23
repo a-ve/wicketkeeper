@@ -44,6 +44,15 @@ func serveJS(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func serveHealthCheck(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	_, err := fmt.Fprint(w, "ok")
+
+	if err != nil {
+		log.Printf("failed to write http response: %w", err.Error())
+	}
+}
+
 func loadOrGeneratePrivateKey(filePath string) (ed25519.PrivateKey, ed25519.PublicKey, error) {
 	keyDataHex, err := os.ReadFile(filePath)
 	if err == nil {
@@ -167,6 +176,7 @@ func main() {
 	sub.HandleFunc("/v0/siteverify", srv.VerifyChallenge)
 	sub.HandleFunc("/fast.js", serveJS)
 	sub.HandleFunc("/slow.js", serveJS)
+	sub.HandleFunc("/health", serveHealthCheck)
 
 	var handler http.Handler = sub
 	if basePath != "" {
