@@ -45,13 +45,11 @@ func serveJS(w http.ResponseWriter, r *http.Request) {
 }
 
 func serveHealthCheck(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-
-	_, err := w.Write([]byte("ok"))
+	_, err := fmt.Fprint(w, "ok")
 
 	if err != nil {
-		http.Error(w, "failed to write http response", http.StatusInternalServerError)
+		log.Printf("failed to write http response: %w", err.Error())
 	}
 }
 
