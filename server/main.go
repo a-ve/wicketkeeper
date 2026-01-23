@@ -178,7 +178,7 @@ func main() {
 	sub.HandleFunc("/v0/siteverify", srv.VerifyChallenge)
 	sub.HandleFunc("/fast.js", serveJS)
 	sub.HandleFunc("/slow.js", serveJS)
-	sub.HandleFunc("/_health", serveHealthCheck)
+	sub.HandleFunc("/health", serveHealthCheck)
 
 	var handler http.Handler = sub
 	if basePath != "" {
