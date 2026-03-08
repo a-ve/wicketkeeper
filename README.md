@@ -1,3 +1,35 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="center">
+        <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=en">English</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=zh-CN">简体中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=zh-TW">繁體中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=ja">日本語</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=ko">한국어</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=hi">हिन्दी</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=th">ไทย</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=fr">Français</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=de">Deutsch</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=es">Español</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=it">Italiano</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=ru">Русский</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=pt">Português</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=nl">Nederlands</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=pl">Polski</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=ar">العربية</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=fa">فارسی</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=tr">Türkçe</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=vi">Tiếng Việt</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=id">Bahasa Indonesia</a>
+        | <a href="https://openaitx.github.io/view.html?user=a-ve&project=wicketkeeper&lang=as">অসমীয়া</
+      </div>
+    </div>
+  </details>
+</div>
+
 <p align="center">
   <a href="https://wicketkeeper.io"><img alt="wicketkeeper" src="/assets/hero-repo.png" width="100%"></a>
 </p>
