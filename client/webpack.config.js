@@ -3,9 +3,6 @@ const webpack = require("webpack");
 
 module.exports = (env = {}) => {
   const solverType = env.solver || "fast";
-  const challengeUrl = JSON.stringify(
-    process.env.CHALLENGE_URL || "http://localhost:8080/v0/challenge"
-  );
 
   return {
     mode: env.mode || "production",
@@ -38,10 +35,5 @@ module.exports = (env = {}) => {
         },
       ],
     },
-    plugins: [
-      new webpack.DefinePlugin({
-        CHALLENGE_URL: challengeUrl,
-      }),
-    ],
   };
 };

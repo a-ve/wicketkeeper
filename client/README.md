@@ -47,16 +47,6 @@ Wicketkeeper is designed to be a privacy-friendly and user-centric alternative t
       npm run build:slow
       ```
 
-### Configuring the Challenge URL
-
-The client needs to know where to fetch the PoW challenge. By default, it points to `http://localhost:8080/v0/challenge`. You should override this at build time with your own endpoint.
-
-Pass the `CHALLENGE_URL` environment variable to the build script:
-
-```bash
-CHALLENGE_URL='https://api.your-domain.com/captcha/challenge' npm run build:fast
-```
-
 ## Usage
 
 After building `dist/wicketkeeper.js`, include it in your HTML file and add the widget to your form.

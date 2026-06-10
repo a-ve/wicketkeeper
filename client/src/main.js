@@ -5,7 +5,6 @@ import { solver } from "solver";
   "use strict";
 
   const DEFAULT_MESSAGE = "Verify you are human";
-  const DEFAULT_CHALLENGE_URL = CHALLENGE_URL;
 
   const $ = (sel, root) => (root || document).querySelector(sel);
 
@@ -30,10 +29,8 @@ import { solver } from "solver";
 
     const options = { inputName: "wicketkeeper_solution", ...opts };
     const endpoints = {
-      challenge: options.endpoints?.challenge || DEFAULT_CHALLENGE_URL,
+      challenge: "{{ .url }}/v0/challenge"
     };
-    if (!endpoints.challenge)
-      throw new Error("endpoints.challenge is required");
 
     container.setAttribute("role", "button");
     container.setAttribute("tabindex", "0");

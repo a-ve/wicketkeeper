@@ -170,6 +170,7 @@ The server is configured via environment variables. See `server/README.md` for m
 | `DIFFICULTY`       | Number of leading zeros for the PoW hash. Higher is harder.                                                                                                                                            | `4`                  |
 | `ALLOWED_ORIGINS`  | Comma-separated list of origins for CORS (e.g., `https://domain.com`).                                                                                                                                 | `*`                  |
 | `BASE_PATH`        | Base path for the server. Note: For paths other than `/` you should use `data-challenge-url` when using the client. See [here](https://wicketkeeper.io/components/frontend-widget.html#configuration). | `/`           |
+| `ROOT_URL`       | Protocol and host for the client JS to connect to.                                                                                                                                                     | `http://localhost:8080` |
 | `PRIVATE_KEY_PATH` | Path to store the Ed25519 private key. Will be created if it doesn't exist.                                                                                                                            | `./wicketkeeper.key` |
 
 **API Endpoints:**
@@ -198,5 +199,3 @@ The script automatically initializes any `div` with the class `.wicketkeeper`.
   <button type="submit">Submit</button>
 </form>
 ```
-
-The client can be configured with a custom challenge endpoint during the build step. See `client/README.md` for details.

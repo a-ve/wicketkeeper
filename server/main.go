@@ -4,15 +4,12 @@ import (
 	"context"
 	"crypto/ed25519"
 	"crypto/rand"
-	"embed"
 	"encoding/hex"
 	"fmt"
-	"io/fs"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
-	"path"
 	"strconv"
 	"strings"
 	"syscall"
@@ -20,29 +17,6 @@ import (
 
 	"github.com/rs/cors"
 )
-
-//go:embed static/*
-var assets embed.FS
-var FS, _ = fs.Sub(assets, "static")
-
-func serveJS(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Cache-Control", "public, max-age=2628000")
-	w.Header().Set("Content-Type", "application/javascript")
-
-	// After StripPrefix, r.URL.Path should be "/fast.js" or "/slow.js".
-	name := path.Base(r.URL.Path)
-	switch name {
-	case "fast.js", "slow.js":
-		data, err := fs.ReadFile(FS, name)
-		if err != nil {
-			http.Error(w, "failed to read file", http.StatusInternalServerError)
-			return
-		}
-		_, _ = w.Write(data)
-	default:
-		http.NotFound(w, r)
-	}
-}
 
 func loadOrGeneratePrivateKey(filePath string) (ed25519.PrivateKey, ed25519.PublicKey, error) {
 	keyDataHex, err := os.ReadFile(filePath)
@@ -133,6 +107,12 @@ func main() {
 		log.Printf("REDIS_DB configured: %d", redisDB)
 	}
 
+	rootUrl := os.Getenv("ROOT_URL")
+	if rootUrl == "" {
+		rootUrl = "http://localhost:8080"
+		log.Printf("ROOT_URL not set, using default: %s", rootUrl)
+	}
+
 	// BASE_PATH is a path prefix only (e.g., "/captcha"). Empty or "/" mounts at root.
 	basePath := os.Getenv("BASE_PATH")
 	basePath = strings.TrimSpace(basePath)
@@ -149,7 +129,7 @@ func main() {
 		log.Printf("BASE_PATH configured: %s", basePath)
 	}
 
-	srv, err := NewServer(difficulty, allowedOriginsList, privKey, pubKey, redisAddr, redisDB)
+	srv, err := NewServer(difficulty, allowedOriginsList, privKey, pubKey, redisAddr, redisDB, rootUrl)
 	if err != nil {
 		log.Fatalf("Failed to initialize server: %v", err)
 	}
@@ -165,8 +145,8 @@ func main() {
 	sub := http.NewServeMux()
 	sub.HandleFunc("/v0/challenge", srv.BuildChallenge)
 	sub.HandleFunc("/v0/siteverify", srv.VerifyChallenge)
-	sub.HandleFunc("/fast.js", serveJS)
-	sub.HandleFunc("/slow.js", serveJS)
+	sub.HandleFunc("/fast.js", srv.serveJS)
+	sub.HandleFunc("/slow.js", srv.serveJS)
 
 	var handler http.Handler = sub
 	if basePath != "" {
