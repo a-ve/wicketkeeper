@@ -5,12 +5,17 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"crypto/subtle"
+	"embed"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/fs"
 	"log"
 	"net/http"
+	"path"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -24,6 +29,11 @@ const (
 	bloomErrorRate = 0.01               // Target false-positive rate for Bloom filters (1%).
 	bloomCapacity  = 500_000            // Expected number of unique CIDs per sliceDuration for Bloom filter sizing.
 )
+
+//go:embed static/*
+var assets embed.FS
+var FS, _ = fs.Sub(assets, "static")
+var templates = template.Must(template.ParseFS(FS, "*.js"))
 
 func bloomKey(t time.Time) string {
 	rounded := t.UTC().Truncate(sliceDuration)
@@ -244,4 +254,19 @@ func (s *Server) VerifyChallenge(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
+}
+
+func (s *Server) serveJS(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "public, max-age=2628000")
+	w.Header().Set("Content-Type", "application/javascript")
+
+	// After StripPrefix, r.URL.Path should be "/fast.js" or "/slow.js".
+	name := path.Base(r.URL.Path)
+	switch name {
+	case "fast.js", "slow.js":
+		io.WriteString(w, s.challengeJS[name])
+	default:
+		http.NotFound(w, r)
+		return
+	}
 }

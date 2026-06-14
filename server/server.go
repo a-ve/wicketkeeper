@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"crypto/ed25519"
 	"fmt"
@@ -18,9 +19,10 @@ type Server struct {
 	allowedOrigins []string           // List of allowed origins for CORS.
 	redisClient    *redis.Client      // Redis client for storing challenge state.
 	checkAddScript *redis.Script      // Lua script for atomically checking and adding CIDs to Bloom filters.
+	challengeJS    map[string]string  // Map of challenge JS scripts for the client.
 }
 
-func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateKey, pubKey ed25519.PublicKey, redisAddr string, redisDB int) (*Server, error) {
+func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateKey, pubKey ed25519.PublicKey, redisAddr string, redisDB int, rootUrl string) (*Server, error) {
 	rdb := redis.NewClient(&redis.Options{
 		Addr: redisAddr,
 		DB:   redisDB,
@@ -55,6 +57,17 @@ func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateK
 		rdb.Del(ctx, "test_bloom_support")
 	}
 
+	challengeJS := map[string]string{}
+	for _, f := range []string{"fast.js", "slow.js"} {
+		var b bytes.Buffer
+		data := map[string]string{"url": rootUrl}
+		err = templates.ExecuteTemplate(&b, f, data)
+		if err != nil {
+			return nil, fmt.Errorf("unable to render js template '%s': %w", f, err)
+		}
+		challengeJS[f] = b.String()
+	}
+
 	return &Server{
 		priv:           privKey,
 		pub:            pubKey,
@@ -62,6 +75,7 @@ func NewServer(difficulty int, allowedOrigins []string, privKey ed25519.PrivateK
 		allowedOrigins: allowedOrigins,
 		redisClient:    rdb,
 		checkAddScript: checkAddScript,
+		challengeJS:    challengeJS,
 	}, nil
 }
 
